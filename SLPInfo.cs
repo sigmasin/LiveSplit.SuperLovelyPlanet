@@ -7,6 +7,8 @@ namespace SuperLovelyPlanet {
 	public partial class SLPInfo : Form {
 		public SLPMemory Memory { get; set; }
 		private DateTime lastCheck = DateTime.MinValue;
+        private bool levelTransition;
+        private string lastLevelName;
 
 		[STAThread]
 		public static void Main(string[] args) {
@@ -24,6 +26,8 @@ namespace SuperLovelyPlanet {
 				InitializeComponent();
 				Text = "Super Lovely Planet " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
 				Memory = new SLPMemory();
+                levelTransition = false;
+                lastLevelName = "";
 
 				Thread t = new Thread(UpdateLoop);
 				t.IsBackground = true;
@@ -53,8 +57,27 @@ namespace SuperLovelyPlanet {
 			if (this.InvokeRequired) {
 				this.Invoke((Action)UpdateValues);
 			} else {
-				lblLevel.Text = "Level: " + Memory.LevelName() + (Memory.IsLoading() ? " (Loading)" : "");
+
+                string levelName = Memory.LevelName();
+                bool isLoading = Memory.IsLoading();
+
+                if (lastLevelName != levelName)
+                {
+                    levelTransition = true;
+                }
+                if (isLoading)
+                {
+                    levelTransition = false;
+                }
+
+                bool displayLoading = isLoading || levelTransition;
+
+                lastLevelName = levelName;
+
+				lblLevel.Text = "Level: " + Memory.LevelName() + (displayLoading ? " (Loading)" : "");
 				lblLevelText.Text = "Time: " + Memory.PlayTime();
+
+
 			}
 		}
 	}

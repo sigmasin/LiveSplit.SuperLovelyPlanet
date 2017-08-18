@@ -18,7 +18,6 @@ namespace LiveSplit.SuperLovelyPlanet {
 		private int currentSplit = -1, lastLogCheck = 0, state = 0;
 		private bool hasLog = false;
 		private Dictionary<string, string> currentValues = new Dictionary<string, string>();
-		private bool wasLoading;
         private bool wasCompleted;
         private bool levelTransition;
 		private string lastLevelName;
@@ -98,7 +97,6 @@ namespace LiveSplit.SuperLovelyPlanet {
 				Model.CurrentState.IsGameTimePaused = isLoading || levelTransition;
 			}
 
-			wasLoading = isLoading;
             wasCompleted = isCompleted;
 			lastLevelName = levelName;
 			HandleSplit(shouldSplit);
